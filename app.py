@@ -733,7 +733,7 @@ def parkinsons_page():
         return
 
     st.info("""
-    **About Parkinson's Voice Analysis**: This model uses various voice measurements to detect early signs of Parkinson's disease.
+    **About Parkinson's Voice Analysis**: This model uses 22 voice measurements to detect early signs of Parkinson's disease.
     These features are typically extracted from sustained phonation of vowel sounds.
     """)
 
@@ -745,96 +745,146 @@ def parkinsons_page():
         col1, col2, col3, col4, col5 = st.columns(5)
 
         with col1:
+            st.markdown("#### Frequency Features")
             fo = st.number_input(
                 "MDVP:Fo(Hz)",
-                min_value=80.0, max_value=300.0, value=150.0, step=0.1
+                min_value=80.0, max_value=300.0, value=150.0, step=0.1,
+                help="Average vocal fundamental frequency"
             )
-            RAP = st.number_input(
-                "MDVP:RAP",
-                min_value=0.0, max_value=0.05, value=0.003, step=0.0001, format="%.4f"
+            
+            fhi = st.number_input(
+                "MDVP:Fhi(Hz)",
+                min_value=100.0, max_value=400.0, value=200.0, step=0.1,
+                help="Maximum vocal fundamental frequency"
             )
-            APQ3 = st.number_input(
-                "Shimmer:APQ3",
-                min_value=0.0, max_value=0.1, value=0.015, step=0.001, format="%.3f"
-            )
-            HNR = st.number_input(
-                "HNR",
-                min_value=0.0, max_value=40.0, value=21.0, step=0.1
-            )
-            D2 = st.number_input(
-                "D2",
-                min_value=0.0, max_value=5.0, value=2.0, step=0.1
+            
+            flo = st.number_input(
+                "MDVP:Flo(Hz)",
+                min_value=80.0, max_value=300.0, value=100.0, step=0.1,
+                help="Minimum vocal fundamental frequency"
             )
 
         with col2:
-            fhi = st.number_input(
-                "MDVP:Fhi(Hz)",
-                min_value=100.0, max_value=400.0, value=200.0, step=0.1
+            st.markdown("#### Jitter Features")
+            Jitter_percent = st.number_input(
+                "MDVP:Jitter(%)",
+                min_value=0.0, max_value=1.0, value=0.01, step=0.0001, format="%.4f",
+                help="Jitter percentage"
             )
+            
+            Jitter_Abs = st.number_input(
+                "MDVP:Jitter(Abs)",
+                min_value=0.0, max_value=0.001, value=0.00005, step=0.00001, format="%.5f",
+                help="Absolute jitter"
+            )
+            
+            RAP = st.number_input(
+                "MDVP:RAP",
+                min_value=0.0, max_value=0.05, value=0.003, step=0.0001, format="%.4f",
+                help="Relative Average Perturbation"
+            )
+            
             PPQ = st.number_input(
                 "MDVP:PPQ",
-                min_value=0.0, max_value=0.05, value=0.003, step=0.0001, format="%.4f"
+                min_value=0.0, max_value=0.05, value=0.003, step=0.0001, format="%.4f",
+                help="Pitch Period Perturbation Quotient"
             )
-            APQ5 = st.number_input(
-                "Shimmer:APQ5",
-                min_value=0.0, max_value=0.15, value=0.018, step=0.001, format="%.3f"
-            )
-            RPDE = st.number_input(
-                "RPDE",
-                min_value=0.0, max_value=1.0, value=0.5, step=0.001, format="%.3f"
-            )
-            PPE = st.number_input(
-                "PPE",
-                min_value=0.0, max_value=1.0, value=0.2, step=0.01
+            
+            DDP = st.number_input(
+                "Jitter:DDP",
+                min_value=0.0, max_value=0.1, value=0.008, step=0.0001, format="%.4f",
+                help="Delta Delta Period"
             )
 
         with col3:
-            flo = st.number_input(
-                "MDVP:Flo(Hz)",
-                min_value=80.0, max_value=300.0, value=100.0, step=0.1
-            )
-            Jitter_percent = st.number_input(
-                "MDVP:Jitter(%)",
-                min_value=0.0, max_value=1.0, value=0.01, step=0.0001, format="%.4f"
-            )
-            Jitter_Abs = st.number_input(
-                "MDVP:Jitter(Abs)",
-                min_value=0.0, max_value=0.001, value=0.00005, step=0.00001, format="%.5f"
-            )
+            st.markdown("#### Shimmer Features")
             Shimmer = st.number_input(
                 "MDVP:Shimmer",
-                min_value=0.0, max_value=0.2, value=0.03, step=0.001, format="%.3f"
+                min_value=0.0, max_value=0.2, value=0.03, step=0.001, format="%.3f",
+                help="Shimmer measurement"
             )
+            
             Shimmer_dB = st.number_input(
                 "MDVP:Shimmer(dB)",
-                min_value=0.0, max_value=5.0, value=0.3, step=0.1
+                min_value=0.0, max_value=5.0, value=0.3, step=0.1,
+                help="Shimmer in dB"
+            )
+            
+            APQ3 = st.number_input(
+                "Shimmer:APQ3",
+                min_value=0.0, max_value=0.1, value=0.015, step=0.001, format="%.3f",
+                help="Amplitude Perturbation Quotient (3-period)"
+            )
+            
+            APQ5 = st.number_input(
+                "Shimmer:APQ5",
+                min_value=0.0, max_value=0.15, value=0.018, step=0.001, format="%.3f",
+                help="Amplitude Perturbation Quotient (5-period)"
+            )
+            
+            APQ = st.number_input(
+                "MDVP:APQ",
+                min_value=0.0, max_value=0.15, value=0.02, step=0.001, format="%.3f",
+                help="Amplitude Perturbation Quotient"
+            )
+            
+            DDA = st.number_input(
+                "Shimmer:DDA",
+                min_value=0.0, max_value=0.1, value=0.025, step=0.001, format="%.3f",
+                help="Delta Delta Amplitude"
             )
 
         with col4:
+            st.markdown("#### Noise & Nonlinear")
             NHR = st.number_input(
                 "NHR",
-                min_value=0.0, max_value=0.5, value=0.02, step=0.001, format="%.3f"
+                min_value=0.0, max_value=0.5, value=0.02, step=0.001, format="%.3f",
+                help="Noise-to-Harmonics Ratio"
             )
+            
+            HNR = st.number_input(
+                "HNR",
+                min_value=0.0, max_value=40.0, value=21.0, step=0.1,
+                help="Harmonics-to-Noise Ratio"
+            )
+            
+            RPDE = st.number_input(
+                "RPDE",
+                min_value=0.0, max_value=1.0, value=0.5, step=0.001, format="%.3f",
+                help="Recurrence Period Density Entropy"
+            )
+            
             DFA = st.number_input(
                 "DFA",
-                min_value=0.0, max_value=2.0, value=0.7, step=0.01
-            )
-            spread1 = st.number_input(
-                "spread1",
-                min_value=-10.0, max_value=0.0, value=-4.0, step=0.1
-            )
-            spread2 = st.number_input(
-                "spread2",
-                min_value=0.0, max_value=10.0, value=3.0, step=0.1
+                min_value=0.0, max_value=2.0, value=0.7, step=0.01,
+                help="Detrended Fluctuation Analysis"
             )
 
         with col5:
-            st.markdown("""
-            #### ℹ️ Tips
-            - These parameters are usually extracted from sustained vowel sounds.  
-            - Higher jitter/shimmer and lower HNR may indicate voice instability.  
-            - RPDE, DFA, spread1/2 and D2 capture non-linear dynamics of the voice.  
-            """)
+            st.markdown("#### Complexity Features")
+            spread1 = st.number_input(
+                "spread1",
+                min_value=-10.0, max_value=0.0, value=-4.0, step=0.1,
+                help="Nonlinear measure 1"
+            )
+            
+            spread2 = st.number_input(
+                "spread2",
+                min_value=0.0, max_value=10.0, value=3.0, step=0.1,
+                help="Nonlinear measure 2"
+            )
+            
+            D2 = st.number_input(
+                "D2",
+                min_value=0.0, max_value=5.0, value=2.0, step=0.1,
+                help="Correlation Dimension"
+            )
+            
+            PPE = st.number_input(
+                "PPE",
+                min_value=0.0, max_value=1.0, value=0.2, step=0.01,
+                help="Pitch Period Entropy"
+            )
 
         submitted = st.form_submit_button("🔍 Predict Parkinson's Risk", use_container_width=True)
 
@@ -842,9 +892,10 @@ def parkinsons_page():
         user_input = [
             fo, fhi, flo,
             Jitter_percent, Jitter_Abs,
-            RAP, PPQ,
+            RAP, PPQ, DDP,
             Shimmer, Shimmer_dB,
             APQ3, APQ5,
+            APQ, DDA,
             NHR, HNR,
             RPDE, DFA,
             spread1, spread2,
@@ -892,9 +943,9 @@ def parkinsons_page():
             'fo': fo, 'fhi': fhi, 'flo': flo,
             'Jitter_percent': Jitter_percent,
             'Jitter_Abs': Jitter_Abs,
-            'RAP': RAP, 'PPQ': PPQ,
+            'RAP': RAP, 'PPQ': PPQ, 'DDP': DDP,
             'Shimmer': Shimmer, 'Shimmer_dB': Shimmer_dB,
-            'APQ3': APQ3, 'APQ5': APQ5,
+            'APQ3': APQ3, 'APQ5': APQ5, 'APQ': APQ, 'DDA': DDA,
             'NHR': NHR, 'HNR': HNR,
             'RPDE': RPDE, 'DFA': DFA,
             'spread1': spread1, 'spread2': spread2,
@@ -923,9 +974,9 @@ def parkinsons_page():
             new_input = [
                 fo, fhi, flo,
                 Jitter_percent, Jitter_Abs,
-                RAP, PPQ,
+                RAP, PPQ, DDP,
                 Shimmer, Shimmer_dB,
-                APQ3, APQ5,
+                APQ3, APQ5, APQ, DDA,
                 NHR, new_HNR,
                 new_RPDE, DFA,
                 spread1, spread2,
